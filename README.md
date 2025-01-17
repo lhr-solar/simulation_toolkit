@@ -111,3 +111,35 @@ git push -u origin <branch-name>
 ```
 
 This sets the upstream branch, so you can use `git push` without specifying the branch name in the future.
+
+---
+
+### 6. Submodules
+#### Initializing and Cloning Submodules
+After cloning a repository with submodules, you need to initialize and fetch the submodule content.
+```bash
+git submodule init
+git submodule update
+```
+
+Alternatively, if you want to clone the repository and its submodules in one step, use the following command:
+```bash
+git clone --recurse-submodules <repository-url>
+```
+
+#### Updating Submodules
+To ensure that your submodules are up-to-date with the latest changes from the remote repositories, you can update them with:
+```bash
+git submodule update --remote
+```
+This fetches the latest commit from the submodule's remote repository and updates your submodule.
+
+#### Adding a Submodule
+To add a new submodule to your repository, use the following command. Replace `<repository-url>` with the URL of the submodule repository and `<path-to-submodule>` with the directory where the submodule will be placed in your project.
+```bash
+# Syntax
+git submodule add <repository-url> <path-to-submodule>
+
+# Example
+git submodule add https://github.com/lhr-solar/simulation_toolkit.git simulation_toolkit
+```
