@@ -1,0 +1,9 @@
+pyvista
+imageio
+numpy
+PyQt5
+scipy
+pandas
+pyyaml
+dash
+git+https://github.com/LonghornRacingElectric/tire_analysis@LHR_tire_toolkit_package
