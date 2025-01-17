@@ -13,7 +13,7 @@ To work on an existing repository, you first need to clone it.
 git clone <repository-url>
 
 # Example
-git clone [https://github.com/<username>/<repository-name>.git](https://github.com/lhr-solar/simulation_toolkit.git)
+git clone https://github.com/lhr-solar/simulation_toolkit.git
 # or
 git clone git@github.com:lhr-solar/simulation_toolkit.git
 ```
@@ -111,5 +111,3 @@ git push -u origin <branch-name>
 ```
 
 This sets the upstream branch, so you can use `git push` without specifying the branch name in the future.
-
----
