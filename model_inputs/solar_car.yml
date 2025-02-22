@@ -9,7 +9,7 @@ Description:
     Description: Internal version number for vehicle
     Type: string
     Unit: N/A
-    Value: 0.1.1
+    Value: 0.1.2
     Changes: NA
 
 Environment:
@@ -85,7 +85,7 @@ Geometric Properties:
       [0.1143, 0.254, 0.12],
       [-0.1143, 0.254, 0.12],
       [-0.0508, 0.2669, 0.1613],
-      [0.0195, 0.3906, 0.3746]]
+      [0.0195, 0.3951, 0.3782]]
   FLOP:
     Description: Front left outboard points [[Upper Fore], [Upper Aft], [Lower Fore], [Lower Aft], [Tie Rod], [Push/Pull Rod]]
     Type: list[list[float]]
@@ -109,7 +109,7 @@ Geometric Properties:
     Value: [
        [0.0195, 0.3114, 0.3357],
       [1, 0, 0],
-      [0.0195, 0.3365, 0.3968],
+      [0.0195, 0.3401, 0.3980],
       [0.0195, 0.2369, 0.5467]]
   FLCP:
     Description: Front left contact patch location
