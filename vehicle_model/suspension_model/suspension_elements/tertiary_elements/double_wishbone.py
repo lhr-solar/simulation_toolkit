@@ -57,6 +57,7 @@ class DoubleWishbone:
     show_ICs : bool
         Toggle visibility of double wishbone vs swing arms
     """
+
     def __init__(
             self,
             inboard_points: Sequence[Sequence[float]],
@@ -72,7 +73,7 @@ class DoubleWishbone:
             tire_radius: float,
             tire_width: float,
             show_ICs: bool) -> None:
-        
+
         # Initialize travel limits
         self.max_jounce: float | None = None
         self.max_rebound: float | None = None
@@ -81,9 +82,9 @@ class DoubleWishbone:
         # Initialize load parameters
         self.spring_rate = spring_rate
         self.weight = weight
-        
+
         # Initialize state and plotter
-        self.total_jounce:float = 0
+        self.total_jounce: float = 0
 
         self.heave_jounce: float = 0
         self.roll_jounce: float = 0
@@ -93,7 +94,7 @@ class DoubleWishbone:
         self.induced_steer = 0
 
         self.sus_plotter = Plotter()
-    
+
         # Define all points
         upper_fore_inboard: Node = Node(position=inboard_points[0])
         upper_aft_inboard: Node = Node(position=inboard_points[1])
@@ -110,27 +111,35 @@ class DoubleWishbone:
         self.cg = cg
 
         # Define all links
-        self.upper_fore_link: Link = Link(inboard=upper_fore_inboard, outboard=upper_fore_outboard)
-        self.upper_aft_link: Link = Link(inboard=upper_aft_inboard, outboard=upper_aft_outboard)
-        self.lower_fore_link: Link = Link(inboard=lower_fore_inboard, outboard=lower_fore_outboard)
-        self.lower_aft_link: Link = Link(inboard=lower_aft_inboard, outboard=lower_aft_outboard)
+        self.upper_fore_link: Link = Link(
+            inboard=upper_fore_inboard, outboard=upper_fore_outboard)
+        self.upper_aft_link: Link = Link(
+            inboard=upper_aft_inboard, outboard=upper_aft_outboard)
+        self.lower_fore_link: Link = Link(
+            inboard=lower_fore_inboard, outboard=lower_fore_outboard)
+        self.lower_aft_link: Link = Link(
+            inboard=lower_aft_inboard, outboard=lower_aft_outboard)
 
         # Define high-level components
-        self.upper_wishbone: Wishbone = Wishbone(fore_link=self.upper_fore_link, aft_link=self.upper_aft_link)
-        self.lower_wishbone: Wishbone = Wishbone(fore_link=self.lower_fore_link, aft_link=self.lower_aft_link)
-        self.kingpin: Kingpin = Kingpin(lower_node=lower_fore_outboard, upper_node=upper_fore_outboard)
-        self.steering_link: SteeringLink = SteeringLink(inboard=tie_inboard, outboard=tie_outboard, kingpin=self.kingpin)
+        self.upper_wishbone: Wishbone = Wishbone(
+            fore_link=self.upper_fore_link, aft_link=self.upper_aft_link)
+        self.lower_wishbone: Wishbone = Wishbone(
+            fore_link=self.lower_fore_link, aft_link=self.lower_aft_link)
+        self.kingpin: Kingpin = Kingpin(
+            lower_node=lower_fore_outboard, upper_node=upper_fore_outboard)
+        self.steering_link: SteeringLink = SteeringLink(
+            inboard=tie_inboard, outboard=tie_outboard, kingpin=self.kingpin)
 
         # Define unsprung parameters
         self.upper_outboard: Node = upper_fore_outboard
         self.lower_outboard: Node = lower_fore_outboard
         self.tie_outboard: Node = tie_outboard
         self.contact_patch: Node = Node(position=contact_patch)
-        self.tire: Tire = Tire(contact_patch=self.contact_patch, 
-                               kingpin=self.kingpin, 
-                               static_gamma=inclination_angle, 
-                               static_toe=toe, 
-                               radius=tire_radius, 
+        self.tire: Tire = Tire(contact_patch=self.contact_patch,
+                               kingpin=self.kingpin,
+                               static_gamma=inclination_angle,
+                               static_toe=toe,
+                               radius=tire_radius,
                                width=tire_width)
 
         # Define instant centers
@@ -150,8 +159,8 @@ class DoubleWishbone:
         bellcrank_direction = bellcrank_params[1]
         shock_outboard = Node(position=bellcrank_params[2])
         shock_inboard = Node(position=bellcrank_params[3])
-        
-        self.rod = PushPullRod(inboard=rod_inboard, 
+
+        self.rod = PushPullRod(inboard=rod_inboard,
                                outboard=rod_outboard,
                                upper=upper,
                                bellcrank=True,
@@ -180,14 +189,15 @@ class DoubleWishbone:
 
             motion_ratio = jounce_interval / (spring_pos_0 - spring_pos_1)
             motion_ratio_lst.append(motion_ratio)
-        
-        self.motion_ratio_function = CubicSpline(x=jounce_sweep, y=motion_ratio_lst)
-        
+
+        self.motion_ratio_function = CubicSpline(
+            x=jounce_sweep, y=motion_ratio_lst)
+
         # Reset jounce
         self.jounce(jounce=0)
 
         # Create function for wheelrate
-        wheelrate_lst = [self.spring_rate / 1.3**2 for MR in motion_ratio_lst]
+        wheelrate_lst = [MR for MR in motion_ratio_lst]
         # wheelrate_lst = [self.spring_rate / MR**2 for MR in [1.3 for x in motion_ratio_lst]]
         self.wheelrate_function = CubicSpline(x=jounce_sweep, y=wheelrate_lst)
 
@@ -199,18 +209,23 @@ class DoubleWishbone:
 
         # Plotting
         if not show_ICs:
-            self.elements = [self.upper_wishbone, self.lower_wishbone, self.kingpin, self.steering_link, self.tire]
+            self.elements = [self.upper_wishbone, self.lower_wishbone,
+                             self.kingpin, self.steering_link, self.tire, self.rod]
         elif max(np.abs(self.SVIC.position)) < 50:
-            self.elements = [self.kingpin, self.steering_link, self.tire, self.FVIC, self.SVIC, self.FVIC_link, self.SVIC_link, self.FV_FAP, self.SV_FAP]
+            self.elements = [self.kingpin, self.steering_link, self.tire, self.FVIC,
+                             self.SVIC, self.FVIC_link, self.SVIC_link, self.FV_FAP, self.SV_FAP, self.rod]
         else:
             # self.elements = [self.kingpin, self.steering_link, self.rod, self.tire, self.FVIC, self.FVIC_link, self.FV_FAP, self.SV_FAP]
-            self.elements = [self.kingpin, self.steering_link, self.tire, self.FVIC_link, self.FV_FAP, self.SV_FAP]
-        
+            self.elements = [self.kingpin, self.steering_link,
+                             self.tire, self.FVIC_link, self.FV_FAP, self.SV_FAP, self.rod]
+
         # Rotations
         if max(np.abs(self.SVIC.position)) < 50:
-            self.all_elements = [self.upper_wishbone, self.lower_wishbone, self.rod, self.steering_link, self.tire, self.FVIC, self.SVIC, self.FV_FAP, self.SV_FAP]
+            self.all_elements = [self.upper_wishbone, self.lower_wishbone, self.rod,
+                                 self.steering_link, self.tire, self.FVIC, self.SVIC, self.FV_FAP, self.SV_FAP]
         else:
-            self.all_elements = [self.upper_wishbone, self.lower_wishbone, self.rod, self.steering_link, self.tire, self.FVIC, self.FV_FAP, self.SV_FAP]
+            self.all_elements = [self.upper_wishbone, self.lower_wishbone, self.rod,
+                                 self.steering_link, self.tire, self.FVIC, self.FV_FAP, self.SV_FAP]
         # self.all_elements = [self.upper_wishbone, self.lower_wishbone, self.steering_link, self.tire]
 
     def _fixed_unsprung_geom(self) -> None:
@@ -228,9 +243,12 @@ class DoubleWishbone:
         None
         """
         # Distance constraints
-        self.cp_to_lower = np.linalg.norm(self.contact_patch.position - self.lower_outboard.position)
-        self.cp_to_upper = np.linalg.norm(self.contact_patch.position - self.upper_outboard.position)
-        self.cp_to_tie = np.linalg.norm(self.contact_patch.position - self.tie_outboard.position)
+        self.cp_to_lower = np.linalg.norm(
+            self.contact_patch.position - self.lower_outboard.position)
+        self.cp_to_upper = np.linalg.norm(
+            self.contact_patch.position - self.upper_outboard.position)
+        self.cp_to_tie = np.linalg.norm(
+            self.contact_patch.position - self.tie_outboard.position)
 
         # Contact patch to kingpin
         ang_x, ang_y = self.kingpin.normalized_transform()
@@ -268,7 +286,8 @@ class DoubleWishbone:
         ang_x, ang_y = self.kingpin.normalized_transform()
         x_rot = rotation_matrix(unit_vec=[1, 0, 0], theta=-1 * ang_x)
         y_rot = rotation_matrix(unit_vec=[0, 1, 0], theta=ang_y)
-        cp_pos = np.matmul(y_rot, np.matmul(x_rot, self.cp_to_kingpin)) + self.lower_outboard.position
+        cp_pos = np.matmul(y_rot, np.matmul(
+            x_rot, self.cp_to_kingpin)) + self.lower_outboard.position
 
         # Geometry constraints
         cp_to_lower = np.linalg.norm(cp_pos - self.lower_outboard.position)
@@ -280,7 +299,7 @@ class DoubleWishbone:
 
         return [(cp_to_lower - self.cp_to_lower) + offset, (cp_to_upper - self.cp_to_upper) + offset]
 
-    def _jounce_induced_steer_resid_func(self, x : Sequence[float]) -> Sequence[float]:
+    def _jounce_induced_steer_resid_func(self, x: Sequence[float]) -> Sequence[float]:
         """
         ## Jounce-Induced Steer Residual Function
 
@@ -321,7 +340,7 @@ class DoubleWishbone:
             Vertical travel of the contact patch due to roll, by default 0
         pitch_jounce : float, optional
             Vertical travel of the contact patch due to pitch, by default 0
-        
+
         Returns
         -------
         None
@@ -330,7 +349,7 @@ class DoubleWishbone:
             self.heave_jounce = 0
             self.roll_jounce = 0
             self.pitch_jounce = 0
-            
+
         if heave_jounce:
             self.heave_jounce = heave_jounce
         if roll_jounce:
@@ -338,10 +357,12 @@ class DoubleWishbone:
         if pitch_jounce:
             self.pitch_jounce = pitch_jounce
 
-        self.total_jounce = jounce + self.heave_jounce + self.roll_jounce + self.pitch_jounce
+        self.total_jounce = jounce + self.heave_jounce + \
+            self.roll_jounce + self.pitch_jounce
 
         if self.total_jounce:
-            wishbone_angles = fsolve(self._jounce_resid_func, [0, 0], args=(self.total_jounce))
+            wishbone_angles = fsolve(self._jounce_resid_func, [
+                                     0, 0], args=(self.total_jounce))
         else:
             wishbone_angles = [0, 0]
 
@@ -350,15 +371,17 @@ class DoubleWishbone:
 
         induced_steer = fsolve(self._jounce_induced_steer_resid_func, [0])
         self.steering_link.rotate(induced_steer[0])
-        
+
         # Set jounce-induced steer in tire
         self.tire.induced_steer = induced_steer[0]
 
         # Apply transformation to push/pull rod
         if self.upper:
-            self.rod.rotate_rod(axis=self.upper_wishbone.direction, origin=self.upper_wishbone.fore_link.inboard_node, angle=wishbone_angles[0])
+            self.rod.rotate_rod(axis=self.upper_wishbone.direction,
+                                origin=self.upper_wishbone.fore_link.inboard_node, angle=wishbone_angles[0])
         else:
-            self.rod.rotate_rod(axis=self.lower_wishbone.direction, origin=self.lower_wishbone.fore_link.inboard_node, angle=wishbone_angles[1])
+            self.rod.rotate_rod(axis=self.lower_wishbone.direction,
+                                origin=self.lower_wishbone.fore_link.inboard_node, angle=wishbone_angles[1])
         self.rod.update()
 
         self.induced_steer = induced_steer[0]
@@ -367,7 +390,7 @@ class DoubleWishbone:
 
         self.FV_FAP.position = self.FV_FAP_position
         self.SV_FAP.position = self.SV_FAP_position
-    
+
     # def jounce_step(self, step: float):
     #     wishbone_angles = fsolve(self._jounce_resid_func, [0, 0], args=(self.current_jounce))
 
@@ -376,7 +399,7 @@ class DoubleWishbone:
 
     #     induced_steer = fsolve(self._jounce_induced_steer_resid_func, [0])
     #     self.steering_link.rotate(induced_steer[0])
-        
+
     #     # Set jounce-induced steer in tire
     #     self.tire.induced_steer = induced_steer[0]
 
@@ -406,7 +429,7 @@ class DoubleWishbone:
         residual_length = self.steering_link.length - self.steering_link.initial_length
 
         return [residual_length]
-    
+
     def steer(self, steer: float) -> None:
         """
         ## Steer
@@ -417,7 +440,7 @@ class DoubleWishbone:
         ----------
         steer : float
             Lateral rack translation
-        
+
         Returns
         -------
         None
@@ -429,7 +452,7 @@ class DoubleWishbone:
         self.tire.induced_steer = angle[0] + self.induced_steer
 
         self.steered_angle = steer
-    
+
     @property
     def motion_ratio(self) -> float:
         """
@@ -456,8 +479,8 @@ class DoubleWishbone:
         float
             Wheelrate under current jounce condition
         """
-        return self.spring_rate / 1.4**2
-    
+        return self.motion_ratio
+
     def translate(self, translation: Sequence[float]) -> None:
         """
         ## Translate
@@ -472,7 +495,7 @@ class DoubleWishbone:
         """
         for element in self.all_elements:
             element.translate(translation=translation)
-    
+
     def flatten_rotate(self, angle: Sequence[float]) -> None:
         """
         ## Flatten Rotate
@@ -507,7 +530,7 @@ class DoubleWishbone:
         lateral_arm = abs(self.contact_patch.position[1] - self.cg.position[1])
 
         return lateral_arm
-    
+
     @property
     def longitudinal_arm(self) -> float:
         """
@@ -520,10 +543,11 @@ class DoubleWishbone:
         float
             Longitudinal distance between contact patch and cg
         """
-        longitudinal_arm = abs(self.contact_patch.position[0] - self.cg.position[0])
+        longitudinal_arm = abs(
+            self.contact_patch.position[0] - self.cg.position[0])
 
         return longitudinal_arm
-    
+
     @property
     def FVIC_position(self) -> Sequence[float]:
         """
@@ -548,11 +572,13 @@ class DoubleWishbone:
                 [upper_plane[1], upper_plane[2]],
                 [lower_plane[1], lower_plane[2]]
             ])
-        
+
         b = np.array(
             [
-                [upper_plane[0] * (upper_plane[3] - x) + upper_plane[1] * upper_plane[4] + upper_plane[2] * upper_plane[5]],
-                [lower_plane[0] * (lower_plane[3] - x) + lower_plane[1] * lower_plane[4] + lower_plane[2] * lower_plane[5]]
+                [upper_plane[0] * (upper_plane[3] - x) + upper_plane[1]
+                 * upper_plane[4] + upper_plane[2] * upper_plane[5]],
+                [lower_plane[0] * (lower_plane[3] - x) + lower_plane[1]
+                 * lower_plane[4] + lower_plane[2] * lower_plane[5]]
             ])
 
         soln = np.linalg.solve(a=a, b=b)
@@ -561,7 +587,7 @@ class DoubleWishbone:
         z = soln[1][0]
 
         return [x, y, z]
-    
+
     @property
     def SVIC_position(self) -> Sequence[float]:
         """
@@ -589,11 +615,13 @@ class DoubleWishbone:
                 [upper_plane[0], upper_plane[2]],
                 [lower_plane[0], lower_plane[2]]
             ])
-        
+
         b = np.array(
             [
-                [upper_plane[1] * (upper_plane[4] - y) + upper_plane[0] * upper_plane[3] + upper_plane[2] * upper_plane[5]],
-                [lower_plane[1] * (lower_plane[4] - y) + lower_plane[0] * lower_plane[3] + lower_plane[2] * lower_plane[5]]
+                [upper_plane[1] * (upper_plane[4] - y) + upper_plane[0]
+                 * upper_plane[3] + upper_plane[2] * upper_plane[5]],
+                [lower_plane[1] * (lower_plane[4] - y) + lower_plane[0]
+                 * lower_plane[3] + lower_plane[2] * lower_plane[5]]
             ])
 
         soln = np.linalg.solve(a=a, b=b)
@@ -615,14 +643,16 @@ class DoubleWishbone:
             Height of the front-view force application point
         """
 
-        dir_yz = self.FVIC_link.inboard_node.position - self.FVIC_link.outboard_node.position
-        z = (dir_yz[2] / dir_yz[1]) * (self.cg.position[1] - self.FVIC_link.outboard_node.position[1]) + self.FVIC_link.outboard_node.position[2]
+        dir_yz = self.FVIC_link.inboard_node.position - \
+            self.FVIC_link.outboard_node.position
+        z = (dir_yz[2] / dir_yz[1]) * (self.cg.position[1] -
+                                       self.FVIC_link.outboard_node.position[1]) + self.FVIC_link.outboard_node.position[2]
 
         x = self.FVIC_link.outboard_node.position[0]
         y = self.cg.position[1]
 
         return [x, y, z]
-    
+
     @property
     def SV_FAP_position(self) -> float:
         """
@@ -635,12 +665,14 @@ class DoubleWishbone:
             Height of the side-view force application point
         """
 
-        dir_xz = self.SVIC_link.inboard_node.position - self.SVIC_link.outboard_node.position
-        z = (dir_xz[2] / dir_xz[0]) * (self.cg.position[0] - self.SVIC_link.outboard_node.position[0]) + self.SVIC_link.outboard_node.position[2]
+        dir_xz = self.SVIC_link.inboard_node.position - \
+            self.SVIC_link.outboard_node.position
+        z = (dir_xz[2] / dir_xz[0]) * (self.cg.position[0] -
+                                       self.SVIC_link.outboard_node.position[0]) + self.SVIC_link.outboard_node.position[2]
 
         x = self.cg.position[0]
         y = self.SVIC_link.outboard_node.position[1]
-        
+
         return [x, y, z]
 
     @property
@@ -670,12 +702,12 @@ class DoubleWishbone:
             Kingpin inclination angle in radians
         """
         return self.kingpin.normalized_transform()[0]
-    
+
     @property
     def scrub(self) -> float:
         kpi_dir = self.kingpin.direction
         center = self.kingpin.center
-        
+
         x = center[0] - center[2] / kpi_dir[2] * kpi_dir[0]
         y = center[1] - center[2] / kpi_dir[2] * kpi_dir[1]
 
@@ -716,7 +748,7 @@ class DoubleWishbone:
         gamma = np.arctan(vec_a[2] / (np.sqrt(vec_a[0]**2 + vec_a[1]**2)))
 
         return gamma
-    
+
     def plot_elements(self, plotter):
         """
         ## Plot Elements

@@ -9,7 +9,7 @@ Description:
     Description: Internal version number for vehicle
     Type: string
     Unit: N/A
-    Value: 0.0.0
+    Value: 0.1.1
     Changes: NA
 
 Environment:
@@ -40,7 +40,7 @@ Mass Properties:
     Description: Mass of front wheel assemblies + half the front suspension linkages
     Type: float
     Unit: kg
-    Value: 16.328
+    Value: 15.77
   RrUM:
     Description: Mass of rear wheel assemblies + half the rear suspension linkages
     Type: float
@@ -50,7 +50,7 @@ Mass Properties:
     Description: Sprung mass = Total mass - driver mass - unsprung mass
     Type: float
     Unit: kg
-    Value: 170
+    Value: 168.22
   SI:
     Description: Sprung mass inertia tensor
     Type: list[list[float], list[float], list[float]]
@@ -60,7 +60,7 @@ Mass Properties:
     Description: CG bias forward
     Type: float
     Unit: (-)
-    Value: 0.50
+    Value: 0.65
   CGBY:
     Description: CG bias leftward
     Type: float
@@ -70,7 +70,7 @@ Mass Properties:
     Description: CG height from ground plane
     Type: float
     Unit: m
-    Value: 0.28448
+    Value: 0.334192971
 
 ### Hardpoints ###
 # Assuming vehicle symmetry about x-z to keep this shorter
@@ -80,48 +80,48 @@ Geometric Properties:
     Type: list[list[float]]
     Unit: m
     Value: [
-      [0.11226939, 0.223, 0.185],
-      [-0.11226939, 0.223, 0.185],
-      [0.112776, 0.2159, 0.08],
-      [-0.09525, 0.2159, 0.08],
-      [0.05715005, 0.211, 0.110],
-      [0, 0.27638715, 0.08312027]]
+       [0.1143, 0.3175, 0.3232],
+      [-0.1143, 0.3175, 0.3232],
+      [0.1143, 0.254, 0.12],
+      [-0.1143, 0.254, 0.12],
+      [-0.0508, 0.2669, 0.1613],
+      [0.0195, 0.3906, 0.3746]]
   FLOP:
     Description: Front left outboard points [[Upper Fore], [Upper Aft], [Lower Fore], [Lower Aft], [Tie Rod], [Push/Pull Rod]]
     Type: list[list[float]]
     Unit: m
     Value: [
-      [-0.00634805, 0.55626, 0.2970022],
-      [-0.00634805, 0.55626, 0.2970022],
-      [0, 0.5703316, 0.1199998],
-      [0, 0.5703316, 0.1199998],
-      [0.05537382, 0.570, 0.15519324],
-      [-0.00002554, 0.51228060, 0.25244758]]
+       [-0.0195, 0.5964, 0.3646],
+      [-0.0195, 0.5964, 0.3646],
+      [0.0195, 0.6264, 0.1203],
+      [0.0195, 0.6264, 0.1203],
+      [-0.0734, 0.5836, 0.1714],
+      [0.0195, 0.5819, 0.1406]]
   FL_Up:
     Description: True if push/pull rod mounts to upper wishbone
     Type: bool
     Unit: N/A
-    Value: True
+    Value: False
   FLBC:
     Description: Front left bellcrank parameters [[Pivot], [Pivot Direction], [Shock Outboard], [Shock Inboard]]
     Type: list[list[float]]
     Unit: m
     Value: [
-      [0, 0.24130000, 0.08890000],
+       [0.0195, 0.3114, 0.3357],
       [1, 0, 0],
-      [0, 0.24079888, 0.13334718],
-      [0, 0.05080000, 0.10160000]]
+      [0.0195, 0.3365, 0.3968],
+      [0.0195, 0.2369, 0.5467]]
   FLCP:
     Description: Front left contact patch location
     Type: list[float]
     Unit: m
-    Value: [0.00000000, 0.6096, 0.00000000]
+    Value: [0.00000000, 0.675, 0.00000000]
   RLIP:
     Description: Rear left inboard points [[Upper Fore], [Upper Aft], [Lower Fore], [Lower Aft], [Tie Rod], [Push/Pull Rod]]
     Type: list[list[float]]
     Unit: m
     Value: [
-      [-1.28834, 0.260, 0.245],
+     [-1.28834, 0.260, 0.245],
       [-1.50424, 0.260, 0.245],
       [-1.28834, 0.25205, 0.08],
       [-1.50424, 0.25205, 0.08],

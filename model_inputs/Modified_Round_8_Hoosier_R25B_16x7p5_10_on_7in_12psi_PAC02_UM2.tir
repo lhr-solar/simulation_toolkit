@@ -65,10 +65,10 @@ IP                       =  83441                   $Inflation Pressure
 IP_NOM                   =  83441                   $Nominal Inflation Pressure
 $-----------------------------------------------------------------DIMENSIONS
 [DIMENSION]
-UNLOADED_RADIUS          =  0.2045                  $Free tyre radius
+UNLOADED_RADIUS          =  0.242443                $Free tyre radius
 WIDTH                    =  0.19                    $Nominal section width of the tyre
 ASPECT_RATIO             =  0.40                    $Nominal aspect ratio
-RIM_RADIUS               =  0.127                   $Nominal rim radius
+RIM_RADIUS               =  0.2                     $Nominal rim radius
 RIM_WIDTH                =  0.1778                  $Rim width
 $-----------------------------------------------------------------SHAPE
 [SHAPE]
