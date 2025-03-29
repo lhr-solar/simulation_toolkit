@@ -9,7 +9,7 @@ Description:
     Description: Internal version number for vehicle
     Type: string
     Unit: N/A
-    Value: 0.1.2
+    Value: 0.1.4
     Changes: NA
 
 Environment:
@@ -80,23 +80,23 @@ Geometric Properties:
     Type: list[list[float]]
     Unit: m
     Value: [
-       [0.1143, 0.3175, 0.3232],
-      [-0.1143, 0.3175, 0.3232],
-      [0.1143, 0.254, 0.12],
-      [-0.1143, 0.254, 0.12],
-      [-0.0508, 0.2669, 0.1613],
-      [0.0195, 0.3951, 0.3782]]
+      [0.1143, 0.3175, 0.3485],
+      [-0.1143, 0.3175, 0.3485],
+      [0.1143, 0.254, 0.1453],
+      [-0.1143, 0.254, 0.1453],
+      [-0.0508, 0.2669, 0.1866],
+      [0.0191, 0.4059, 0.4123]]
   FLOP:
     Description: Front left outboard points [[Upper Fore], [Upper Aft], [Lower Fore], [Lower Aft], [Tie Rod], [Push/Pull Rod]]
     Type: list[list[float]]
     Unit: m
     Value: [
-       [-0.0195, 0.5964, 0.3646],
-      [-0.0195, 0.5964, 0.3646],
-      [0.0195, 0.6264, 0.1203],
-      [0.0195, 0.6264, 0.1203],
-      [-0.0734, 0.5836, 0.1714],
-      [0.0195, 0.5819, 0.1406]]
+      [-0.0191, 0.5970, 0.3858],
+      [-0.0195, 0.5970, 0.3858],
+      [0.0191, 0.6264, 0.1463],
+      [0.0191, 0.6264, 0.1463],
+      [-0.0652, 0.5852, 0.1962],
+      [0.0191, 0.5819, 0.1667]]
   FL_Up:
     Description: True if push/pull rod mounts to upper wishbone
     Type: bool
@@ -107,10 +107,10 @@ Geometric Properties:
     Type: list[list[float]]
     Unit: m
     Value: [
-       [0.0195, 0.3114, 0.3357],
+      [0, 0.3175, 0.3485],
       [1, 0, 0],
-      [0.0195, 0.3401, 0.3980],
-      [0.0195, 0.2369, 0.5467]]
+      [0.0191, 0.3494, 0.4274],
+      [0.0191, 0.2369, 0.5720]]
   FLCP:
     Description: Front left contact patch location
     Type: list[float]
